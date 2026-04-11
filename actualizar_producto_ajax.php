@@ -4,46 +4,51 @@ header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
-        // Recogemos los datos del FormData (los names de tus inputs)
+        // Capturamos los datos del FormData basándonos en tu HTML
         $id = $_POST['id'] ?? '';
         $nombre = $_POST['nombre'] ?? '';
         $codigo = $_POST['codigo_interno'] ?? '';
         $unidad = $_POST['unidad_medida'] ?? '';
-        $tipo = $_POST['tipo'] ?? '';
+        $tipo = $_POST['tipo'] ?? ''; // CATEGORÍA en tu HTML
         $stock_min = $_POST['stock_minimo'] ?? 0;
 
-        if (empty($id) || empty($nombre)) {
-            echo json_encode(['status' => 'error', 'message' => 'Faltan datos críticos.']);
+        // Estos son los campos que no te estaban actualizando:
+        $fabricante = $_POST['fabricante'] ?? '';
+        $almacen = $_POST['almacen'] ?? '';
+        $precio = $_POST['precio_unitario'] ?? 0; // Coincide con name="precio_unitario"
+
+        if (empty($id)) {
+            echo json_encode(['status' => 'error', 'message' => 'ID no recibido.']);
             exit;
         }
 
-        // Consulta SQL con los nombres exactos de tu tabla 'productos'
         $sql = "UPDATE productos SET 
                 nombre = :nombre, 
                 codigo_interno = :codigo, 
                 unidad_medida = :unidad, 
                 tipo = :tipo, 
-                stock_minimo = :stock_min 
+                stock_minimo = :stock_min,
+                fabricante = :fabricante,
+                almacen = :almacen,
+                precio_unitario = :precio
                 WHERE id = :id";
-        
+
         $stmt = $pdo->prepare($sql);
         $result = $stmt->execute([
-            ':nombre'    => $nombre,
-            ':codigo'    => $codigo,
-            ':unidad'    => $unidad,
-            ':tipo'      => $tipo,
+            ':nombre' => $nombre,
+            ':codigo' => $codigo,
+            ':unidad' => $unidad,
+            ':tipo' => $tipo,
             ':stock_min' => $stock_min,
-            ':id'        => $id
+            ':fabricante' => $fabricante,
+            ':almacen' => $almacen,
+            ':precio' => $precio,
+            ':id' => $id
         ]);
 
-        if ($result) {
-            echo json_encode(['status' => 'success']);
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'No hubo cambios o error en DB.']);
-        }
+        echo json_encode(['status' => 'success']);
 
     } catch (PDOException $e) {
-        echo json_encode(['status' => 'error', 'message' => 'Error de DB: ' . $e->getMessage()]);
+        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
 }
-?>
