@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 2. Verificamos la contraseña usando SOLO el hash de la BD
     if ($usuario && password_verify($pass_input, $usuario['password_hash'])) {
-        
+
         // 3. Si es correcto, creamos la sesión
         $_SESSION['user_id'] = $usuario['id'];
         $_SESSION['username'] = $usuario['usuario'];

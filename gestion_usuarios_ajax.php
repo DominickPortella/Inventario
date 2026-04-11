@@ -15,7 +15,7 @@ try {
         $user = $_POST['usuario'];
         $pass = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $rol = $_POST['rol'];
-        
+
         $stmt = $pdo->prepare("INSERT INTO usuarios (usuario, password_hash, rol) VALUES (?, ?, ?)");
         $stmt->execute([$user, $pass, $rol]);
         echo json_encode(['status' => 'success']);
@@ -24,7 +24,7 @@ try {
         $id = $_POST['id'];
         $user = $_POST['usuario'];
         $rol = $_POST['rol'];
-        
+
         // Si mandó contraseña nueva, la actualizamos, si no, solo el resto
         if (!empty($_POST['password'])) {
             $pass = password_hash($_POST['password'], PASSWORD_DEFAULT);

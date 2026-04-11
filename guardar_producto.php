@@ -1,33 +1,50 @@
 <?php
-session_start();
 require 'db.php';
-if (!isset($_SESSION['user_id'])) {
-    exit;
-}
+header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // CORRECCIÓN: Los nombres deben coincidir con el atributo 'name' del HTML
-    $codigo = $_POST['codigo_interno']; // Antes era 'codigo'
-    $nombre = $_POST['nombre'];
-    $tipo = $_POST['tipo'];
-    $unidad = $_POST['unidad_medida']; // Antes era 'unidad'
-    $minimo = $_POST['stock_minimo'];  // Antes era 'minimo'
-    $stock_inicial = $_POST['stock_actual'] ?? 0;
-
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
-        // Añadimos stock_actual a la consulta para que el stock inicial no sea siempre 0
-        $sql = "INSERT INTO productos (codigo_interno, nombre, tipo, unidad_medida, stock_minimo, stock_actual) VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$codigo, $nombre, $tipo, $unidad, $minimo, $stock_inicial]);
+        // Recibimos los datos del formulario "Registrar Nuevo Artículo"
+        $codigo     = $_POST['codigo_interno'] ?? '';
+        $nombre     = $_POST['nombre'] ?? '';
+        $unidad     = $_POST['unidad_medida'] ?? '';
+        $fabricante = $_POST['fabricante'] ?? '';
+        $tipo       = $_POST['tipo'] ?? '';
+        $almacen    = $_POST['almacen'] ?? '';
+        $stock_act  = $_POST['stock_actual'] ?? 0;
+        $stock_min  = $_POST['stock_minimo'] ?? 0;
+        $precio     = $_POST['precio_unitario'] ?? 0;
+        $obs        = $_POST['observaciones'] ?? '';
 
-        // Si la petición es AJAX (por tu JS), devolvemos JSON
-        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-            echo json_encode(['status' => 'success']);
-        } else {
-            header("Location: panel_inventario.php?success=1");
+        // Validar campos obligatorios
+        if (empty($codigo) || empty($nombre)) {
+            echo json_encode(['status' => 'error', 'message' => 'Código y Nombre son obligatorios']);
+            exit;
         }
-    } catch (Exception $e) {
-        header('Content-Type: application/json');
-        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+
+        // Preparamos el SQL con todas las columnas
+        $sql = "INSERT INTO productos 
+                (codigo_interno, nombre, unidad_medida, fabricante, tipo, almacen, stock_actual, stock_minimo, precio_unitario, observaciones) 
+                VALUES 
+                (:codigo, :nombre, :unidad, :fabricante, :tipo, :almacen, :stock_act, :stock_min, :precio, :obs)";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':codigo'     => $codigo,
+            ':nombre'     => $nombre,
+            ':unidad'     => $unidad,
+            ':fabricante' => $fabricante,
+            ':tipo'       => $tipo,
+            ':almacen'    => $almacen,
+            ':stock_act'  => $stock_act,
+            ':stock_min'  => $stock_min,
+            ':precio'     => $precio,
+            ':obs'        => $obs
+        ]);
+
+        echo json_encode(['status' => 'success']);
+
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Error en la base de datos: ' . $e->getMessage()]);
     }
 }

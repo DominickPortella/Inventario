@@ -2,7 +2,7 @@
 require 'db.php';
 
 // Configuración del usuario inicial
-$usuario_nombre = 'admin'; 
+$usuario_nombre = 'admin';
 $password_clara = 'admin123'; // Puedes cambiarla aquí
 $nuevo_hash = password_hash($password_clara, PASSWORD_DEFAULT);
 
@@ -12,7 +12,7 @@ try {
     $sql = "INSERT INTO usuarios (usuario, password_hash, rol) VALUES (?, ?, ?)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$usuario_nombre, $nuevo_hash, 'admin']);
-    
+
     echo "✅ Usuario maestro creado correctamente. <br>";
     echo "Usuario: <b>$usuario_nombre</b> <br>";
     echo "Contraseña: <b>$password_clara</b> <br>";
@@ -20,7 +20,7 @@ try {
 
 } catch (Exception $e) {
     // Si sale error porque ya existe, entonces intentamos actualizarlo
-    if ($e->getCode() == 23000) { 
+    if ($e->getCode() == 23000) {
         $sql = "UPDATE usuarios SET password_hash = ? WHERE usuario = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$nuevo_hash, $usuario_nombre]);

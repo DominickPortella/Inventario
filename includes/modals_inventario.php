@@ -107,7 +107,7 @@
 
 <div class="modal fade" id="modalNuevo" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <form action="guardar_producto.php" method="POST" class="modal-content border-0 shadow">
+        <form id="formNuevoMaterial" class="modal-content border-0 shadow">
             <div class="modal-header bg-primary text-white border-0">
                 <h5 class="modal-title fw-bold"><i class="bi bi-plus-lg me-2"></i>Registrar Nuevo Artículo</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
