@@ -1,0 +1,133 @@
+<?php
+// 1. Consulta de productos para la tabla
+$stmt = $pdo->query("SELECT * FROM productos ORDER BY nombre ASC");
+$productos = $stmt->fetchAll();
+
+// 2. Definición de CATEGORÍAS
+$categorias_fijas = [
+    "EPPS",
+    "CONSUMIBLES",
+    "SPAT",
+    "ACC. PVC. DESG.",
+    "ACC. COBRE",
+    "HERRAMIENTAS",
+    "ANDAMIO",
+    "ECONOMATO",
+    "HERRAMIENTAS DE PODER",
+    "SUJECIONES",
+    "PRUEBAS",
+    "TUB.PEX-AL-PEX",
+    "ACC.PVP.ELEC.",
+    "BANDEJAS",
+    "ACC.EMT",
+    "TUB. PVC-P ELEC.",
+    "TUB.LIV.SAN.",
+    "TUB. PVC DESAG.",
+    "TUB. FLEX. ELEC.",
+    "TUB. EMT",
+    "TUB. COBRE",
+    "PLACAS",
+    "TERMINALES",
+    "ACC.GALVANIZADO",
+    "CAJAS FG",
+    "TABLEROS",
+    "EQUIP. TABLEROS",
+    "SEGURIDAD",
+    "INSTRUMENTOS",
+    "ACC.CISTERNA",
+    "AISLAMIENTO"
+];
+
+$stmt_cat = $pdo->query("SELECT DISTINCT tipo FROM productos WHERE tipo IS NOT NULL AND tipo != ''");
+$categorias_db = $stmt_cat->fetchAll(PDO::FETCH_COLUMN);
+$todas_categorias = array_unique(array_merge($categorias_fijas, $categorias_db));
+sort($todas_categorias);
+
+// 3. Definición de FABRICANTES
+$fabricantes_fijos = [
+    "3BSI",
+    "3M",
+    "ACEROS ARQ",
+    "ANYPSA",
+    "ARTESCO",
+    "BELLSAFE",
+    "BOSCH",
+    "BROTHER",
+    "BTICINO",
+    "BURNDY",
+    "CADWEL",
+    "CAYKEN",
+    "CELSA",
+    "CLUTE",
+    "CONYCON",
+    "CYTEX",
+    "DCA",
+    "DEWALT",
+    "DRAKE",
+    "EMTOP",
+    "EPC",
+    "EPSON",
+    "ERICO GEM",
+    "ES",
+    "HILTI",
+    "HP",
+    "HUQSVARNA",
+    "HYDRAULIC",
+    "IERICAN ELECTF",
+    "IMACO",
+    "INDECO",
+    "INGCO",
+    "INTELLI",
+    "IMPORTADO",
+    "IUSA",
+    "JAM",
+    "JET",
+    "JET PIPE",
+    "JORMEN",
+    "KENWOOD",
+    "KNAUFF",
+    "KYORITSU",
+    "LAYHER",
+    "LEGRAND",
+    "LENOVO",
+    "LG",
+    "LS",
+    "MAKITA",
+    "MATUSITA",
+    "MW",
+    "NACIONAL",
+    "NEXANS",
+    "NIBCO",
+    "NICOLL",
+    "OATEY",
+    "OPALUX",
+    "PHILIPS",
+    "SANDFLEX",
+    "SHURTAPE",
+    "SIEVERT",
+    "SINTHESI",
+    "SOL",
+    "SOLDEXA",
+    "STANLEY",
+    "SUPERLON",
+    "TABLEROS",
+    "TAUMM",
+    "TECNO-BENT",
+    "TECNO-SAL",
+    "TECNOWELD",
+    "TECREAL",
+    "THERMOWELD",
+    "TOTAL",
+    "TRUPER",
+    "TUBOPLAST",
+    "TUMI",
+    "WD-40",
+    "WELDWELL",
+    "WINTERS"
+];
+
+$stmt_fab = $pdo->query("SELECT DISTINCT fabricante FROM productos WHERE fabricante IS NOT NULL AND fabricante != ''");
+$fabricantes_db = $stmt_fab->fetchAll(PDO::FETCH_COLUMN);
+$todos_fabricantes = array_unique(array_merge($fabricantes_fijos, $fabricantes_db));
+sort($todos_fabricantes);
+?>
