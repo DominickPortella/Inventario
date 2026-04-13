@@ -62,15 +62,16 @@ $historial = $stmt->fetchAll();
 
         <div class="custom-card shadow-sm bg-white rounded-4 overflow-hidden">
             <div class="table-responsive">
-                <table class="table align-middle mb-0">
+                <table class="table table-hover align-middle">
                     <thead class="bg-light">
                         <tr>
-                            <th class="ps-4 py-3">Fecha y Hora</th>
-                            <th class="py-3">Material / Producto</th>
-                            <th class="text-center py-3">Tipo</th>
-                            <th class="text-center py-3">Cantidad</th>
-                            <th class="py-3">Responsable</th>
-                            <th class="pe-4 py-3">Ubicación</th>
+                            <th class="py-3">FECHA Y HORA</th>
+                            <th class="py-3">MATERIAL / PRODUCTO</th>
+                            <th class="py-3">TIPO</th>
+                            <th class="py-3">CANTIDAD</th>
+                            <th class="py-3">COSTO (S/)</th>
+                            <th class="py-3">RESPONSABLE</th>
+                            <th class="py-3">UBICACIÓN</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,12 +90,14 @@ $historial = $stmt->fetchAll();
                                             hs</small>
                                     </div>
                                 </td>
+
                                 <td>
                                     <div class="fw-bold text-dark"><?php echo htmlspecialchars($h['producto_nombre']); ?>
                                     </div>
                                     <span
                                         class="badge bg-light text-primary border-0 small"><?php echo $h['codigo_interno']; ?></span>
                                 </td>
+
                                 <td class="text-center">
                                     <span
                                         class="badge-status <?php echo $statusClass; ?> px-2 py-1 rounded-3 small fw-bold">
@@ -102,19 +105,33 @@ $historial = $stmt->fetchAll();
                                         <?php echo strtoupper($h['tipo_movimiento']); ?>
                                     </span>
                                 </td>
+
                                 <td class="text-center">
                                     <span class="fs-6 fw-bold <?php echo $isSalida ? 'text-danger' : 'text-success'; ?>">
                                         <?php echo ($isSalida ? '-' : '+'); ?>
                                         <?php echo number_format($h['cantidad'], 0); ?>
                                     </span>
                                 </td>
+
+                                <td class="text-center">
+                                    <?php if (!$isSalida && $h['precio_movimiento'] > 0): ?>
+                                        <span class="fw-bold text-dark">S/
+                                            <?php echo number_format($h['precio_movimiento'], 2); ?></span>
+                                    <?php else: ?>
+                                        <span class="text-muted small">---</span>
+                                    <?php endif; ?>
+                                </td>
+
                                 <td>
                                     <span
                                         class="text-dark fw-medium"><?php echo htmlspecialchars($h['responsable'] ?: 'Sin asignar'); ?></span>
                                 </td>
+
                                 <td class="pe-4">
-                                    <small class="text-secondary"><i
-                                            class="bi bi-geo-alt me-1"></i><?php echo htmlspecialchars($h['ubicacion'] ?: 'Obra'); ?></small>
+                                    <small class="text-secondary">
+                                        <i
+                                            class="bi bi-geo-alt me-1"></i><?php echo htmlspecialchars($h['ubicacion'] ?: 'Obra'); ?>
+                                    </small>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

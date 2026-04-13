@@ -72,6 +72,18 @@
             });
         };
 
+        // Este script hace que el precio aparezca SOLO cuando eligen "Entrada"
+        document.getElementById('move_tipo').addEventListener('change', function () {
+            const contenedorPrecio = document.getElementById('contenedor_precio');
+            if (this.value === 'entrada') {
+                contenedorPrecio.style.display = 'block';
+            } else {
+                contenedorPrecio.style.display = 'none';
+                // Opcional: limpiar el valor si eligen salida
+                contenedorPrecio.querySelector('input').value = '';
+            }
+        });
+
         handleAJAX('formEditar', 'actualizar_producto_ajax.php');
         handleAJAX('formMovimiento', 'guardar_movimiento.php');
         handleAJAX('formNuevoMaterial', 'guardar_producto.php');

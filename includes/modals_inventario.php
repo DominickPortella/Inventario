@@ -308,8 +308,7 @@
                 <input type="hidden" name="producto_id" id="mov_producto_id">
 
                 <div class="mb-4">
-                    <label class="form-label small fw-bold text-uppercase text-muted"
-                        style="letter-spacing: 0.5px;">Material Seleccionado</label>
+                    <label class="form-label small fw-bold text-uppercase text-muted">Material Seleccionado</label>
                     <div class="input-group">
                         <span class="input-group-text bg-light border-0"><i class="bi bi-box-seam"></i></span>
                         <input type="text" id="mov_nombre_producto" class="form-control bg-light border-0 fw-bold"
@@ -342,10 +341,21 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label small fw-bold text-secondary">Cantidad</label>
+                        <input type="number" step="0.01" name="cantidad"
+                            class="form-control shadow-sm fw-bold text-primary" placeholder="0.00" required>
+                    </div>
+
+                    <div class="col-12" id="contenedor_precio">
+                        <label class="form-label small fw-bold text-success">
+                            <i class="bi bi-currency-dollar me-1"></i>COSTO TOTAL DEL INGRESO (Soles)
+                        </label>
                         <div class="input-group">
-                            <input type="number" step="0.01" name="cantidad"
-                                class="form-control shadow-sm fw-bold text-primary" placeholder="0.00" required>
+                            <span class="input-group-text bg-success text-white border-0">S/</span>
+                            <input type="number" step="0.01" name="precio_movimiento"
+                                class="form-control border-success shadow-sm fw-bold" placeholder="0.00">
                         </div>
+                        <small class="text-muted" style="font-size: 0.75rem;">Indica cuánto costó este nuevo ingreso
+                            para acumularlo al precio actual.</small>
                     </div>
                 </div>
 

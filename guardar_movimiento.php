@@ -5,12 +5,11 @@ require 'db.php';
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // 1. Capturamos los datos del formulario
     $id = $_POST['producto_id'] ?? null;
     $tipo = $_POST['tipo_movimiento'] ?? null;
     $cantidad = $_POST['cantidad'] ?? 0;
+    $precio_movimiento = $_POST['precio_movimiento'] ?? 0; // Capturamos el nuevo precio
 
-    // CAPTURA DE NUEVOS CAMPOS (Asegúrate que en el HTML los "name" sean estos)
     $responsable = $_POST['responsable'] ?? '';
     $ubicacion = $_POST['ubicacion'] ?? '';
     $notas = $_POST['observaciones'] ?? '';
@@ -22,26 +21,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $pdo->beginTransaction();
 
-        // 2. Insertar en movimientos usando las nuevas columnas: responsable y ubicacion
-        // Se eliminó 'ubicacion_obra' y 'referencia' para usar los campos limpios
-        $sql1 = "INSERT INTO movimientos (producto_id, tipo_movimiento, cantidad, responsable, ubicacion, observaciones, usuario_id) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // 1. Insertar en historial incluyendo el precio de esta operación
+        $sql1 = "INSERT INTO movimientos (producto_id, tipo_movimiento, cantidad, precio_movimiento, responsable, ubicacion, observaciones, usuario_id) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         $pdo->prepare($sql1)->execute([
             $id,
             $tipo,
             $cantidad,
-            $responsable, // Nombres y Apellidos
-            $ubicacion,   // Empresa o lugar (ej: Los Portales)
+            $precio_movimiento,
+            $responsable,
+            $ubicacion,
             $notas,
             $_SESSION['user_id']
         ]);
 
-        // 3. Actualizar stock en la tabla productos
-        $operacion = ($tipo === 'salida') ? "-" : "+";
-
-        $sql2 = "UPDATE productos SET stock_actual = stock_actual $operacion ? WHERE id = ?";
-        $pdo->prepare($sql2)->execute([$cantidad, $id]);
+        // 2. Actualizar Stock y Precio Acumulado en la tabla productos
+        if ($tipo === 'entrada') {
+            // Si entra material: SUMA stock y SUMA precio
+            $sql2 = "UPDATE productos SET 
+                     stock_actual = stock_actual + ?, 
+                     precio_unitario = precio_unitario + ? 
+                     WHERE id = ?";
+            $pdo->prepare($sql2)->execute([$cantidad, $precio_movimiento, $id]);
+        } else {
+            // Si sale material: RESTA solo stock (el precio acumulado suele mantenerse o bajar proporcionalmente)
+            $sql2 = "UPDATE productos SET stock_actual = stock_actual - ? WHERE id = ?";
+            $pdo->prepare($sql2)->execute([$cantidad, $id]);
+        }
 
         $pdo->commit();
         echo json_encode(['status' => 'success']);
