@@ -5,17 +5,15 @@ require 'db.php';
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Capturamos los IDs y valores según los "name" de tu modal
-    $id       = $_POST['producto_id'] ?? null;
-    $tipo     = $_POST['tipo_movimiento'] ?? null; // Recibe 'entrada' o 'salida'
-    $cantidad = $_POST['cantidad'] ?? 0;
+    // 1. Capturamos los datos del formulario
+    $id         = $_POST['producto_id'] ?? null;
+    $tipo       = $_POST['tipo_movimiento'] ?? null; 
+    $cantidad   = $_POST['cantidad'] ?? 0;
     
-    // CORRECCIÓN: Tu HTML usa name="referencia"
-    $referencia = $_POST['referencia'] ?? ''; 
-    
-    // Estos campos no existen en tu modal actual, los dejamos como opcionales
-    $ubicacion = $_POST['ubicacion_obra'] ?? 'Obra';
-    $notas     = $_POST['observaciones'] ?? '';
+    // CAPTURA DE NUEVOS CAMPOS (Asegúrate que en el HTML los "name" sean estos)
+    $responsable = $_POST['responsable'] ?? ''; 
+    $ubicacion   = $_POST['ubicacion'] ?? '';
+    $notas       = $_POST['observaciones'] ?? '';
 
     try {
         if (!$id || !$tipo || $cantidad <= 0) {
@@ -24,23 +22,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $pdo->beginTransaction();
 
-        // 1. Insertar en movimientos (Asegúrate que la tabla tenga estos nombres de columna)
-        $sql1 = "INSERT INTO movimientos (producto_id, tipo_movimiento, cantidad, responsable, ubicacion_obra, observaciones, usuario_id) 
+        // 2. Insertar en movimientos usando las nuevas columnas: responsable y ubicacion
+        // Se eliminó 'ubicacion_obra' y 'referencia' para usar los campos limpios
+        $sql1 = "INSERT INTO movimientos (producto_id, tipo_movimiento, cantidad, responsable, ubicacion, observaciones, usuario_id) 
                  VALUES (?, ?, ?, ?, ?, ?, ?)";
         
-        // Usamos $referencia para la columna 'responsable'
         $pdo->prepare($sql1)->execute([
             $id, 
             $tipo, 
             $cantidad, 
-            $referencia, 
-            $ubicacion, 
+            $responsable, // Nombres y Apellidos
+            $ubicacion,   // Empresa o lugar (ej: Los Portales)
             $notas, 
             $_SESSION['user_id']
         ]);
 
-        // 2. Actualizar stock
-        // CORRECCIÓN: Comparar con 'salida' en minúsculas (según tu HTML)
+        // 3. Actualizar stock en la tabla productos
         $operacion = ($tipo === 'salida') ? "-" : "+";
         
         $sql2 = "UPDATE productos SET stock_actual = stock_actual $operacion ? WHERE id = ?";
