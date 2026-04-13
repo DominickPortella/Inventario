@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db.php';
+require 'config/db.php';
 
 // Seguridad: Solo admin puede tocar usuarios
 if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') {

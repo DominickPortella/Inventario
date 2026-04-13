@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db.php';
+require 'config/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_input = $_POST['usuario'];

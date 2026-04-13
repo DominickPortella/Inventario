@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require 'config/db.php';
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -9,13 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $nombre = $_POST['nombre'] ?? '';
         $codigo = $_POST['codigo_interno'] ?? '';
         $unidad = $_POST['unidad_medida'] ?? '';
-        $tipo = $_POST['tipo'] ?? ''; // CATEGORÍA en tu HTML
+        $tipo = $_POST['tipo'] ?? '';
         $stock_min = $_POST['stock_minimo'] ?? 0;
 
         // Estos son los campos que no te estaban actualizando:
         $fabricante = $_POST['fabricante'] ?? '';
         $almacen = $_POST['almacen'] ?? '';
-        $precio = $_POST['precio_unitario'] ?? 0; // Coincide con name="precio_unitario"
+        $precio = $_POST['precio_unitario'] ?? 0;
 
         if (empty($id)) {
             echo json_encode(['status' => 'error', 'message' => 'ID no recibido.']);

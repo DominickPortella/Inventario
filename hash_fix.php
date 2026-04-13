@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require 'config/db.php';
 
 $password_deseada = '12345'; // La clave que quieras usar
 $nuevo_hash = password_hash($password_deseada, PASSWORD_DEFAULT);

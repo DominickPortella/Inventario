@@ -1,5 +1,5 @@
 <?php
-require_once 'db.php'; // Tu archivo de conexión
+require_once 'config/db.php';
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {

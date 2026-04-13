@@ -16,7 +16,7 @@
                 <i class="bi bi-people me-2"></i>Usuarios
             </button>
 
-            <a href="exportar_excel.php" class="btn btn-success btn-modern shadow-sm">
+            <a href="modules/exportar_excel.php" class="btn btn-success btn-modern shadow-sm">
                 <i class="bi bi-file-earmark-excel me-2"></i>Exportar
             </a>
 

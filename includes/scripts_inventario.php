@@ -85,8 +85,8 @@
         });
 
         handleAJAX('formEditar', 'actualizar_producto_ajax.php');
-        handleAJAX('formMovimiento', 'guardar_movimiento.php');
-        handleAJAX('formNuevoMaterial', 'guardar_producto.php');
+        handleAJAX('formMovimiento', 'modules/guardar_movimiento.php');
+        handleAJAX('formNuevoMaterial', 'modules/guardar_producto.php');
     });
 
     // Gestión de Usuarios (Sin cambios, está correcto)
@@ -169,7 +169,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 // Enviamos la petición por AJAX
-                fetch('eliminar_producto.php', {
+                fetch('modules/eliminar_producto.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: `id=${id}`

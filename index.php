@@ -19,7 +19,7 @@
                 <p class="auth-subtitle">Gestión de Materiales</p>
             </div>
 
-            <form action="auth.php" method="POST">
+            <form action="modules/auth.php" method="POST">
                 <div class="mb-3">
                     <label class="form-label">Usuario</label>
                     <input type="text" name="usuario" class="form-control" required placeholder="Ingresa tu usuario">
