@@ -145,37 +145,37 @@
     }
 
     function eliminarProducto(id, nombre) {
-    Swal.fire({
-        title: '¿Estás seguro?',
-        text: `Vas a eliminar el material: ${nombre}. Esta acción no se puede deshacer.`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Enviamos la petición por AJAX
-            fetch('eliminar_producto.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `id=${id}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    Swal.fire('¡Eliminado!', data.message, 'success')
-                    .then(() => location.reload()); // Recargamos para actualizar la lista
-                } else {
-                    Swal.fire('Error', data.message, 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire('Error', 'No se pudo procesar la solicitud', 'error');
-            });
-        }
-    });
-}
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: `Vas a eliminar el material: ${nombre}. Esta acción no se puede deshacer.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Enviamos la petición por AJAX
+                fetch('eliminar_producto.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `id=${id}`
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            Swal.fire('¡Eliminado!', data.message, 'success')
+                                .then(() => location.reload()); // Recargamos para actualizar la lista
+                        } else {
+                            Swal.fire('Error', data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire('Error', 'No se pudo procesar la solicitud', 'error');
+                    });
+            }
+        });
+    }
 </script>

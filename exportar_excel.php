@@ -1,6 +1,6 @@
 <?php
 // Incluir tu archivo de conexión real
-require 'db.php'; 
+require 'db.php';
 
 // Configuración de cabeceras para descarga inmediata
 header("Content-Type: application/vnd.ms-excel; charset=UTF-8");

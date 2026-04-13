@@ -1,8 +1,8 @@
 <?php
-$host = '127.0.0.1'; // Cambia localhost por 127.0.0.1 para evitar demoras
+$host = '127.0.0.1';
 $db = 'db_obra';
 $user = 'root';
-$pass = 'admin'; // Si en tu Workbench usas contraseña para entrar, ponla aquí. 
+$pass = 'admin';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
