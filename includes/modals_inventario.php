@@ -349,11 +349,11 @@
                         <label class="form-label small fw-bold text-success">
                             <i class="bi bi-currency-dollar me-1"></i>COSTO TOTAL DEL INGRESO (Soles)
                         </label>
-<div class="input-group">
-    <span class="input-group-text bg-success text-white border-0">S/</span>
-    <input type="number" step="0.01" name="precio_movimiento" id="precio_movimiento"
-           class="form-control border-success shadow-sm fw-bold" placeholder="0.00">
-</div>
+                        <div class="input-group">
+                            <span class="input-group-text bg-success text-white border-0">S/</span>
+                            <input type="number" step="0.01" name="precio_movimiento" id="precio_movimiento"
+                                class="form-control border-success shadow-sm fw-bold" placeholder="0.00">
+                        </div>
                         <small class="text-muted" style="font-size: 0.75rem;">Indica cuánto costó este nuevo ingreso
                             para acumularlo al precio actual.</small>
                     </div>
