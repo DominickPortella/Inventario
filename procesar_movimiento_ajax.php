@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'config/db.php'; // Asegúrate de que la ruta sea correcta según la ubicación del archivo
+require 'config/db.php'; 
 
 header('Content-Type: application/json');
 
@@ -9,22 +9,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tipo = $_POST['tipo_movimiento'];
     $cantidad = floatval($_POST['cantidad']);
     $responsable = $_POST['responsable'];
-    $ubicacion = $_POST['ubicacion'] ?? 'Obra'; // Ajustado a tu columna real 'ubicacion'
+    $ubicacion = $_POST['ubicacion'] ?? 'Obra';
 
     // LÓGICA DE PRECIO:
-    // Si es Entrada, intentamos capturar el precio. Si es Salida, forzamos 0.
     if (strtolower($tipo) === 'entrada') {
         $precio = (isset($_POST['precio_movimiento']) && $_POST['precio_movimiento'] !== '')
             ? floatval($_POST['precio_movimiento'])
             : 0.00;
     } else {
-        $precio = 0.00; // En salidas el precio siempre será 0
+        $precio = 0.00;
     }
 
     try {
         $pdo->beginTransaction();
 
-        // 1. Insertar movimiento con el precio ya validado
+        // 1. Insertar movimiento
         $sql1 = "INSERT INTO movimientos (producto_id, tipo_movimiento, cantidad, precio_movimiento, responsable, ubicacion, observaciones, usuario_id) 
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -39,10 +38,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id']
         ]);
 
-        // 2. Actualizar stock
-        $operacion = (strtolower($tipo) == 'salida') ? "-" : "+";
-        $sql2 = "UPDATE productos SET stock_actual = stock_actual $operacion ? WHERE id = ?";
-        $pdo->prepare($sql2)->execute([$cantidad, $id]);
+        // 2. ACTUALIZACIÓN DE PRODUCTO (Stock y Precio)
+        if (strtolower($tipo) === 'entrada') {
+            // Sumamos stock y sumamos el precio al acumulado actual
+            $sql2 = "UPDATE productos SET 
+                     stock_actual = stock_actual + ?, 
+                     precio_unitario = precio_unitario + ? 
+                     WHERE id = ?";
+            $pdo->prepare($sql2)->execute([$cantidad, $precio, $id]);
+        } else {
+            // Si es salida, solo restamos stock
+            $sql2 = "UPDATE productos SET stock_actual = stock_actual - ? WHERE id = ?";
+            $pdo->prepare($sql2)->execute([$cantidad, $id]);
+        }
 
         $pdo->commit();
         echo json_encode(['status' => 'success']);
