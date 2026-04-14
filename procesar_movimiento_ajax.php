@@ -10,13 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cantidad = floatval($_POST['cantidad']);
     $responsable = $_POST['responsable'];
     $ubicacion = $_POST['ubicacion'] ?? 'Obra'; // Ajustado a tu columna real 'ubicacion'
-    
+
     // LÓGICA DE PRECIO:
     // Si es Entrada, intentamos capturar el precio. Si es Salida, forzamos 0.
     if (strtolower($tipo) === 'entrada') {
-        $precio = (isset($_POST['precio_movimiento']) && $_POST['precio_movimiento'] !== '') 
-                  ? floatval($_POST['precio_movimiento']) 
-                  : 0.00;
+        $precio = (isset($_POST['precio_movimiento']) && $_POST['precio_movimiento'] !== '')
+            ? floatval($_POST['precio_movimiento'])
+            : 0.00;
     } else {
         $precio = 0.00; // En salidas el precio siempre será 0
     }
@@ -27,9 +27,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 1. Insertar movimiento con el precio ya validado
         $sql1 = "INSERT INTO movimientos (producto_id, tipo_movimiento, cantidad, precio_movimiento, responsable, ubicacion, observaciones, usuario_id) 
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        
+
         $pdo->prepare($sql1)->execute([
-            $id, $tipo, $cantidad, $precio, $responsable, $ubicacion, $_POST['observaciones'] ?? '', $_SESSION['user_id']
+            $id,
+            $tipo,
+            $cantidad,
+            $precio,
+            $responsable,
+            $ubicacion,
+            $_POST['observaciones'] ?? '',
+            $_SESSION['user_id']
         ]);
 
         // 2. Actualizar stock
@@ -41,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status' => 'success']);
 
     } catch (Exception $e) {
-        if ($pdo->inTransaction()) $pdo->rollBack();
+        if ($pdo->inTransaction())
+            $pdo->rollBack();
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
 }
