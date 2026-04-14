@@ -1,5 +1,5 @@
 <?php
-require 'config/db.php';
+require './config/db.php';
 
 // Configuración del usuario inicial
 $usuario_nombre = 'admin';

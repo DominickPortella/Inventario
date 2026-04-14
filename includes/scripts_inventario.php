@@ -30,63 +30,74 @@
         new bootstrap.Modal(document.getElementById('modalMovimiento')).show();
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Buscador Realtime
-        const buscador = document.getElementById('buscador');
-        if (buscador) {
-            buscador.addEventListener('keyup', function () {
-                let filtro = this.value.toLowerCase();
-                document.querySelectorAll('#filasInventario tr').forEach(fila => {
-                    fila.style.display = fila.textContent.toLowerCase().includes(filtro) ? '' : 'none';
-                });
+document.addEventListener('DOMContentLoaded', function () {
+    // 1. Buscador Realtime (Correcto)
+    const buscador = document.getElementById('buscador');
+    if (buscador) {
+        buscador.addEventListener('keyup', function () {
+            let filtro = this.value.toLowerCase();
+            document.querySelectorAll('#filasInventario tr').forEach(fila => {
+                fila.style.display = fila.textContent.toLowerCase().includes(filtro) ? '' : 'none';
             });
-        }
+        });
+    }
 
-        // Helper para AJAX de Productos
-        const handleAJAX = (formId, url) => {
-            const form = document.getElementById(formId);
-            if (!form) return;
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                const btn = this.querySelector('button[type="submit"]');
-                btn.disabled = true;
-
-                // FormData captura TODOS los inputs que tengan un atributo 'name'
-                const datos = new FormData(this);
-
-                fetch(url, { method: 'POST', body: datos })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            Swal.fire({ icon: 'success', title: '¡Hecho!', timer: 1000, showConfirmButton: false })
-                                .then(() => location.reload()); // RECARGA para ver cambios
-                        } else {
-                            Swal.fire('Error', data.message, 'error');
-                            btn.disabled = false;
-                        }
-                    }).catch(err => {
-                        console.error("Error en el fetch:", err);
-                        Swal.fire('Error', 'Error de conexión al servidor', 'error');
-                        btn.disabled = false;
-                    });
-            });
-        };
-
-        // Este script hace que el precio aparezca SOLO cuando eligen "Entrada"
-        document.getElementById('move_tipo').addEventListener('change', function () {
+    // 2. Lógica para ocultar/mostrar precio en Movimientos
+    const selectMov = document.getElementById('move_tipo');
+    if (selectMov) {
+        selectMov.addEventListener('change', function() {
+            // Buscamos por NAME para asegurar que coincida con lo que PHP recibe
+            const campoPrecio = document.querySelector('input[name="precio_movimiento"]');
             const contenedorPrecio = document.getElementById('contenedor_precio');
-            if (this.value === 'entrada') {
-                contenedorPrecio.style.display = 'block';
+
+            // IMPORTANTE: Comparamos en minúsculas para que coincida con el value del HTML
+            if (this.value === 'salida') { 
+                if(campoPrecio) {
+                    campoPrecio.value = '0'; 
+                    campoPrecio.required = false;
+                }
+                if(contenedorPrecio) contenedorPrecio.style.display = 'none';
             } else {
-                contenedorPrecio.style.display = 'none';
-                // Opcional: limpiar el valor si eligen salida
-                contenedorPrecio.querySelector('input').value = '';
+                if(campoPrecio) {
+                    campoPrecio.required = true;
+                }
+                if(contenedorPrecio) contenedorPrecio.style.display = 'block';
             }
         });
+    }
 
-        handleAJAX('formEditar', 'actualizar_producto_ajax.php');
-        handleAJAX('formMovimiento', 'modules/guardar_movimiento.php');
-        handleAJAX('formNuevoMaterial', 'modules/guardar_producto.php');
+    // 3. Helper para AJAX (Mantenlo como está, es muy eficiente)
+    const handleAJAX = (formId, url) => {
+        const form = document.getElementById(formId);
+        if (!form) return;
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            btn.disabled = true;
+
+            const datos = new FormData(this);
+
+            fetch(url, { method: 'POST', body: datos })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        Swal.fire({ icon: 'success', title: '¡Hecho!', timer: 1000, showConfirmButton: false })
+                            .then(() => location.reload()); 
+                    } else {
+                        Swal.fire('Error', data.message, 'error');
+                        btn.disabled = false;
+                    }
+                }).catch(err => {
+                    console.error("Error en el fetch:", err);
+                    Swal.fire('Error', 'Error de conexión al servidor', 'error');
+                    btn.disabled = false;
+                });
+        });
+    };
+
+handleAJAX('formEditar', 'actualizar_producto_ajax.php');
+handleAJAX('formMovimiento', 'procesar_movimiento_ajax.php'); // Ruta corregida
+handleAJAX('formNuevoMaterial', './modules/guardar_producto.php');
     });
 
     // Gestión de Usuarios (Sin cambios, está correcto)
@@ -169,7 +180,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 // Enviamos la petición por AJAX
-                fetch('modules/eliminar_producto.php', {
+                fetch('./modules/eliminar_producto.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: `id=${id}`

@@ -16,7 +16,7 @@
                 <i class="bi bi-people me-2"></i>Usuarios
             </button>
 
-            <a href="modules/exportar_excel.php" class="btn btn-success btn-modern shadow-sm">
+            <a href="./modules/exportar_excel.php" class="btn btn-success btn-modern shadow-sm">
                 <i class="bi bi-file-earmark-excel me-2"></i>Exportar
             </a>
 
@@ -334,10 +334,10 @@
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label class="form-label small fw-bold text-secondary">Tipo de Movimiento</label>
-                        <select name="tipo_movimiento" id="move_tipo" class="form-select shadow-sm fw-semibold">
-                            <option value="entrada" class="text-success">➕ Entrada (Suma)</option>
-                            <option value="salida" class="text-danger">➖ Salida (Resta)</option>
-                        </select>
+<select name="tipo_movimiento" id="move_tipo" class="form-select shadow-sm fw-semibold">
+    <option value="entrada">➕ Entrada (Suma)</option>
+    <option value="salida">➖ Salida (Resta)</option>
+</select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label small fw-bold text-secondary">Cantidad</label>
@@ -351,7 +351,7 @@
                         </label>
                         <div class="input-group">
                             <span class="input-group-text bg-success text-white border-0">S/</span>
-                            <input type="number" step="0.01" name="precio_movimiento"
+<input type="number" step="0.01" name="precio_movimiento" id="precio_movimiento" class="form-control border-success shadow-sm fw-bold" placeholder="0.00">
                                 class="form-control border-success shadow-sm fw-bold" placeholder="0.00">
                         </div>
                         <small class="text-muted" style="font-size: 0.75rem;">Indica cuánto costó este nuevo ingreso

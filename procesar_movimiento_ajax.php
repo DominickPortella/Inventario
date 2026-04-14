@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'config/db.php';
+require 'config/db.php'; // Asegúrate de que la ruta sea correcta según la ubicación del archivo
 
 header('Content-Type: application/json');
 
@@ -9,37 +9,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tipo = $_POST['tipo_movimiento'];
     $cantidad = floatval($_POST['cantidad']);
     $responsable = $_POST['responsable'];
-    $ubicacion = $_POST['ubicacion_obra'] ?? 'Obra';
-    $notas = $_POST['observaciones'] ?? '';
+    $ubicacion = $_POST['ubicacion'] ?? 'Obra'; // Ajustado a tu columna real 'ubicacion'
+    
+    // LÓGICA DE PRECIO:
+    // Si es Entrada, intentamos capturar el precio. Si es Salida, forzamos 0.
+    if (strtolower($tipo) === 'entrada') {
+        $precio = (isset($_POST['precio_movimiento']) && $_POST['precio_movimiento'] !== '') 
+                  ? floatval($_POST['precio_movimiento']) 
+                  : 0.00;
+    } else {
+        $precio = 0.00; // En salidas el precio siempre será 0
+    }
 
     try {
         $pdo->beginTransaction();
 
-        // 1. Insertar movimiento
-        $sql1 = "INSERT INTO movimientos (producto_id, tipo_movimiento, cantidad, responsable, ubicacion_obra, observaciones, usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $pdo->prepare($sql1)->execute([$id, $tipo, $cantidad, $responsable, $ubicacion, $notas, $_SESSION['user_id']]);
+        // 1. Insertar movimiento con el precio ya validado
+        $sql1 = "INSERT INTO movimientos (producto_id, tipo_movimiento, cantidad, precio_movimiento, responsable, ubicacion, observaciones, usuario_id) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        $pdo->prepare($sql1)->execute([
+            $id, $tipo, $cantidad, $precio, $responsable, $ubicacion, $_POST['observaciones'] ?? '', $_SESSION['user_id']
+        ]);
 
         // 2. Actualizar stock
-        $operacion = ($tipo == 'Salida') ? "-" : "+";
+        $operacion = (strtolower($tipo) == 'salida') ? "-" : "+";
         $sql2 = "UPDATE productos SET stock_actual = stock_actual $operacion ? WHERE id = ?";
         $pdo->prepare($sql2)->execute([$cantidad, $id]);
 
-        // 3. Obtener el nuevo stock para devolverlo a la interfaz
-        $sql3 = "SELECT stock_actual, stock_minimo FROM productos WHERE id = ?";
-        $stmt = $pdo->prepare($sql3);
-        $stmt->execute([$id]);
-        $productoActualizado = $stmt->fetch();
-
         $pdo->commit();
-
-        echo json_encode([
-            'status' => 'success',
-            'nuevo_stock' => $productoActualizado['stock_actual'],
-            'stock_minimo' => $productoActualizado['stock_minimo']
-        ]);
+        echo json_encode(['status' => 'success']);
 
     } catch (Exception $e) {
-        $pdo->rollBack();
+        if ($pdo->inTransaction()) $pdo->rollBack();
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
 }
