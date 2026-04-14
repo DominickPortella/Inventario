@@ -6,6 +6,9 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Configuración de zona horaria para Perú
+date_default_timezone_set('America/Lima');
+
 $sql = "SELECT m.*, p.nombre as producto_nombre, p.codigo_interno, u.usuario as nombre_usuario
         FROM movimientos m 
         JOIN productos p ON m.producto_id = p.id 
@@ -20,7 +23,7 @@ $historial = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historial LPDC - UX Pro</title>
+    <title>Historial Los Parques de Comas - ELECTRO CORRALES</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
@@ -34,14 +37,12 @@ $historial = $stmt->fetchAll();
             font-family: 'Segoe UI', Roboto, sans-serif;
         }
 
-        /* Contenedor principal con aire */
         .main-container {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
 
-        /* Card estilo moderno */
         .custom-card {
             background: white;
             border-radius: 15px;
@@ -50,13 +51,46 @@ $historial = $stmt->fetchAll();
             overflow: hidden;
         }
 
-        /* Ajustes de Tabla Responsive UX */
-        @media (max-width: 768px) {
-            .responsive-table thead {
-                display: none;
+        /* CONFIGURACIÓN DE IMPRESIÓN */
+        @media print {
+            /* Elimina encabezados y pies de página automáticos del navegador */
+            @page {
+                margin: 1cm;
             }
 
-            /* Escondemos cabecera en móvil */
+            nav, .navbar, .btn, .btn-white, .text-decoration-none, .d-print-none { 
+                display: none !important; 
+            }
+
+            body { background-color: white !important; }
+            
+            .main-container { 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                max-width: 100% !important; 
+            }
+
+            .custom-card { 
+                box-shadow: none !important; 
+                border: 1px solid #eee !important; 
+            }
+
+            .d-print-header {
+                display: flex !important;
+                justify-content: space-between;
+                align-items: flex-start;
+                border-bottom: 2px solid #333;
+                padding-bottom: 15px;
+                margin-bottom: 25px;
+            }
+        }
+
+        /* Estilo para pantallas normales */
+        .d-print-header { display: none; }
+
+        /* Ajustes de Tabla Responsive */
+        @media (max-width: 768px) {
+            .responsive-table thead { display: none; }
             .responsive-table td {
                 display: block;
                 text-align: right;
@@ -64,10 +98,8 @@ $historial = $stmt->fetchAll();
                 position: relative;
                 border-bottom: 1px solid #eee;
             }
-
             .responsive-table td::before {
                 content: attr(data-label);
-                /* Usamos etiquetas para saber qué es cada dato */
                 position: absolute;
                 left: 15px;
                 width: 45%;
@@ -75,7 +107,6 @@ $historial = $stmt->fetchAll();
                 font-weight: 700;
                 color: #666;
             }
-
             .responsive-table tr {
                 display: block;
                 margin-bottom: 1rem;
@@ -85,7 +116,6 @@ $historial = $stmt->fetchAll();
             }
         }
 
-        /* Badges estilizados */
         .badge-custom {
             padding: 0.5em 0.8em;
             border-radius: 6px;
@@ -94,47 +124,46 @@ $historial = $stmt->fetchAll();
             font-size: 0.75rem;
         }
 
-        .bg-salida {
-            background-color: #fff5f5;
-            color: #e03131;
-            border: 1px solid #ffc9c9;
-        }
-
-        .bg-entrada {
-            background-color: #f4fce3;
-            color: #2f9e41;
-            border: 1px solid #d8f5a2;
-        }
-
-        .btn-back {
-            border-radius: 8px;
-            transition: 0.3s;
-        }
-
-        .btn-back:hover {
-            transform: translateX(-5px);
-        }
+        .bg-salida { background-color: #fff5f5; color: #e03131; border: 1px solid #ffc9c9; }
+        .bg-entrada { background-color: #f4fce3; color: #2f9e41; border: 1px solid #d8f5a2; }
     </style>
 </head>
 
 <body>
 
-    <nav class="navbar navbar-dark bg-dark py-3">
+    <nav class="navbar navbar-dark bg-dark py-3 shadow-sm">
         <div class="container">
-            <span class="navbar-brand mb-0 h1"><i class="bi bi-building-gear me-2"></i>OBRA LPDC</span>
-            <a href="panel_inventario.php" class="btn btn-outline-light btn-sm btn-back">
-                <i class="bi bi-arrow-left"></i> Panel Principal
+            <a class="navbar-brand" href="#">
+                <img src="images/logo.png" alt="Logo" height="45" class="d-inline-block align-top">
             </a>
+            <div class="d-flex align-items-center">
+                <div class="text-white me-3 d-none d-md-block">
+                    <small class="text-muted">Hola,</small> <strong><?php echo $_SESSION['username']; ?></strong>
+                </div>
+                <a href="logout.php" class="btn btn-outline-danger btn-sm rounded-pill px-3">Salir</a>
+            </div>
         </div>
     </nav>
 
     <div class="main-container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        
+        <div class="d-print-header">
+            <div>
+                <img src="images/logo.png" alt="Logo" height="65">
+            </div>
+            <div class="text-end">
+                <h5 class="mb-1 fw-bold">OBRA: <span class="fw-normal">LOS PARQUES DE COMAS</span></h5>
+                <h5 class="mb-1 fw-bold">ENCARGADO: <span class="fw-normal">Angelo Olivera Lozano</span></h5>
+                <p class="text-muted small mb-0">Generado el: <?php echo date('d/m/Y H:i'); ?></p>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4 d-print-none">
             <div>
                 <h2 class="fw-bold text-dark mb-0">Historial de Movimientos</h2>
                 <p class="text-muted">Registro detallado de entradas y salidas de materiales</p>
             </div>
-            <button onclick="window.print()" class="btn btn-white shadow-sm border d-none d-md-block">
+            <button onclick="window.print()" class="btn btn-white shadow-sm border">
                 <i class="bi bi-printer me-2"></i>Imprimir Reporte
             </button>
         </div>
@@ -157,18 +186,14 @@ $historial = $stmt->fetchAll();
                             <tr>
                                 <td data-label="Fecha" class="ps-4">
                                     <div class="fw-bold"><?php echo date('d/m/Y', strtotime($h['fecha'])); ?></div>
-                                    <div class="small text-muted"><?php echo date('H:i', strtotime($h['fecha'])); ?> hs
-                                    </div>
+                                    <div class="small text-muted"><?php echo date('H:i', strtotime($h['fecha'])); ?> hs</div>
                                 </td>
                                 <td data-label="Material">
-                                    <span
-                                        class="text-dark fw-semibold"><?php echo htmlspecialchars($h['producto_nombre']); ?></span><br>
+                                    <span class="text-dark fw-semibold"><?php echo htmlspecialchars($h['producto_nombre']); ?></span><br>
                                     <code class="small text-primary"><?php echo $h['codigo_interno']; ?></code>
                                 </td>
                                 <td data-label="Tipo" class="text-center">
-                                    <?php
-                                    $typeClass = ($h['tipo_movimiento'] == 'Salida') ? 'bg-salida' : 'bg-entrada';
-                                    ?>
+                                    <?php $typeClass = ($h['tipo_movimiento'] == 'Salida') ? 'bg-salida' : 'bg-entrada'; ?>
                                     <span class="badge-custom <?php echo $typeClass; ?>">
                                         <?php echo $h['tipo_movimiento']; ?>
                                     </span>
@@ -183,8 +208,7 @@ $historial = $stmt->fetchAll();
                                     </div>
                                 </td>
                                 <td data-label="Ubicación" class="pe-4">
-                                    <span class="text-muted"><i
-                                            class="bi bi-geo-alt me-1"></i><?php echo htmlspecialchars($h['ubicacion_obra']); ?></span>
+                                    <span class="text-muted small"><i class="bi bi-geo-alt me-1 text-danger"></i><?php echo htmlspecialchars($h['ubicacion_obra']); ?></span>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -195,5 +219,4 @@ $historial = $stmt->fetchAll();
     </div>
 
 </body>
-
 </html>

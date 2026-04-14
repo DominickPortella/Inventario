@@ -73,17 +73,20 @@ require 'includes/logica_inventario.php';
 </head>
 
 <body>
-    <nav class="navbar navbar-dark bg-dark py-3 shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#"><i class="bi bi-building-gear me-2 text-primary"></i>OBRA LPDC</a>
-            <div class="d-flex align-items-center">
-                <div class="text-white me-3 d-none d-md-block">
-                    <small class="text-muted">Hola,</small> <strong><?php echo $_SESSION['username']; ?></strong>
-                </div>
-                <a href="logout.php" class="btn btn-outline-danger btn-sm rounded-pill px-3">Salir</a>
+   <nav class="navbar navbar-dark bg-dark py-3 shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="images/logo.png" alt="Logo OBRA LPDC" height="50" class="d-inline-block align-top">
+        </a>
+
+        <div class="d-flex align-items-center">
+            <div class="text-white me-3 d-none d-md-block">
+                <small class="text-muted">Hola,</small> <strong><?php echo $_SESSION['username']; ?></strong>
             </div>
+            <a href="logout.php" class="btn btn-outline-danger btn-sm rounded-pill px-3">Salir</a>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <div class="container-fluid mt-4 mb-5 px-4">
     </div>
