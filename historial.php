@@ -1,13 +1,10 @@
 <?php
 session_start();
-require 'db.php';
+require './config/db.php';
 if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
-
-// Configuración de zona horaria para Perú
-date_default_timezone_set('America/Lima');
 
 $sql = "SELECT m.*, p.nombre as producto_nombre, p.codigo_interno, u.usuario as nombre_usuario
         FROM movimientos m 
@@ -23,192 +20,118 @@ $historial = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historial Los Parques de Comas - ELECTRO CORRALES</title>
+    <title>Historial de Movimientos - LPDC Pro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <style>
-        :root {
-            --primary-dark: #212529;
-            --accent-color: #0d6efd;
-        }
-
-        body {
-            background-color: #f4f7f6;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-        }
-
-        .main-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .custom-card {
-            background: white;
-            border-radius: 15px;
-            border: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-        }
-
-        /* CONFIGURACIÓN DE IMPRESIÓN */
-        @media print {
-            /* Elimina encabezados y pies de página automáticos del navegador */
-            @page {
-                margin: 1cm;
-            }
-
-            nav, .navbar, .btn, .btn-white, .text-decoration-none, .d-print-none { 
-                display: none !important; 
-            }
-
-            body { background-color: white !important; }
-            
-            .main-container { 
-                margin: 0 !important; 
-                padding: 0 !important; 
-                max-width: 100% !important; 
-            }
-
-            .custom-card { 
-                box-shadow: none !important; 
-                border: 1px solid #eee !important; 
-            }
-
-            .d-print-header {
-                display: flex !important;
-                justify-content: space-between;
-                align-items: flex-start;
-                border-bottom: 2px solid #333;
-                padding-bottom: 15px;
-                margin-bottom: 25px;
-            }
-        }
-
-        /* Estilo para pantallas normales */
-        .d-print-header { display: none; }
-
-        /* Ajustes de Tabla Responsive */
-        @media (max-width: 768px) {
-            .responsive-table thead { display: none; }
-            .responsive-table td {
-                display: block;
-                text-align: right;
-                padding-left: 50%;
-                position: relative;
-                border-bottom: 1px solid #eee;
-            }
-            .responsive-table td::before {
-                content: attr(data-label);
-                position: absolute;
-                left: 15px;
-                width: 45%;
-                text-align: left;
-                font-weight: 700;
-                color: #666;
-            }
-            .responsive-table tr {
-                display: block;
-                margin-bottom: 1rem;
-                border: 1px solid #e0e0e0;
-                border-radius: 10px;
-                background: #fff;
-            }
-        }
-
-        .badge-custom {
-            padding: 0.5em 0.8em;
-            border-radius: 6px;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-        }
-
-        .bg-salida { background-color: #fff5f5; color: #e03131; border: 1px solid #ffc9c9; }
-        .bg-entrada { background-color: #f4fce3; color: #2f9e41; border: 1px solid #d8f5a2; }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/historial.css">
 </head>
 
 <body>
+    <div class="print-header">
+        <img src="img/logo.png" alt="Logo Empresa" class="print-logo">
+        <div class="text-end">
+            <h3 class="fw-bold mb-0">REPORTE DE MOVIMIENTOS</h3>
+            <p class="mb-0">Obra LPDC - Generado el: <?php echo date('d/m/Y H:i'); ?></p>
+        </div>
+    </div>
 
-    <nav class="navbar navbar-dark bg-dark py-3 shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="images/logo.png" alt="Logo" height="45" class="d-inline-block align-top">
+    <nav class="navbar navbar-dark bg-dark py-2 sticky-top shadow-sm">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center" href="panel_inventario.php">
+                <img src="img/logo.png" alt="Logo OBRA LPDC" class="navbar-logo rounded-2">
             </a>
-            <div class="d-flex align-items-center">
-                <div class="text-white me-3 d-none d-md-block">
-                    <small class="text-muted">Hola,</small> <strong><?php echo $_SESSION['username']; ?></strong>
-                </div>
-                <a href="logout.php" class="btn btn-outline-danger btn-sm rounded-pill px-3">Salir</a>
-            </div>
+            <a href="panel_inventario.php" class="btn btn-outline-light btn-sm btn-back px-3 border-0">
+                <i class="bi bi-arrow-left me-2"></i>Volver al Panel
+            </a>
         </div>
     </nav>
 
-    <div class="main-container">
-        
-        <div class="d-print-header">
-            <div>
-                <img src="images/logo.png" alt="Logo" height="65">
+    <div class="main-container container-fluid mt-4">
+        <div class="row align-items-center mb-4">
+            <div class="col-md-8">
+                <h2 class="fw-bold text-dark mb-1">Historial de Movimientos</h2>
+                <p class="text-muted mb-0">Auditoría en tiempo real de entradas y salidas.</p>
             </div>
-            <div class="text-end">
-                <h5 class="mb-1 fw-bold">OBRA: <span class="fw-normal">LOS PARQUES DE COMAS</span></h5>
-                <h5 class="mb-1 fw-bold">ENCARGADO: <span class="fw-normal">Angelo Olivera Lozano</span></h5>
-                <p class="text-muted small mb-0">Generado el: <?php echo date('d/m/Y H:i'); ?></p>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <button onclick="window.print()" class="btn btn-white shadow-sm border btn-print fw-bold px-4 py-2">
+                    <i class="bi bi-printer me-2 text-primary"></i>Imprimir Reporte
+                </button>
             </div>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mb-4 d-print-none">
-            <div>
-                <h2 class="fw-bold text-dark mb-0">Historial de Movimientos</h2>
-                <p class="text-muted">Registro detallado de entradas y salidas de materiales</p>
-            </div>
-            <button onclick="window.print()" class="btn btn-white shadow-sm border">
-                <i class="bi bi-printer me-2"></i>Imprimir Reporte
-            </button>
-        </div>
-
-        <div class="custom-card">
+        <div class="custom-card shadow-sm bg-white rounded-4 overflow-hidden">
             <div class="table-responsive">
-                <table class="table responsive-table align-middle mb-0">
+                <table class="table table-hover align-middle">
                     <thead class="bg-light">
                         <tr>
-                            <th class="ps-4">Fecha</th>
-                            <th>Material</th>
-                            <th class="text-center">Tipo</th>
-                            <th class="text-center">Cant.</th>
-                            <th>Responsable</th>
-                            <th class="pe-4">Ubicación</th>
+                            <th class="py-3">FECHA Y HORA</th>
+                            <th class="py-3">MATERIAL / PRODUCTO</th>
+                            <th class="py-3">TIPO</th>
+                            <th class="py-3">CANTIDAD</th>
+                            <th class="py-3">COSTO (S/)</th>
+                            <th class="py-3">RESPONSABLE</th>
+                            <th class="py-3">UBICACIÓN</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($historial as $h): ?>
+                        <?php foreach ($historial as $h):
+                            $tipo_check = strtolower($h['tipo_movimiento']);
+                            $isSalida = ($tipo_check == 'salida');
+                            $statusClass = $isSalida ? 'status-salida' : 'status-entrada';
+                            $statusIcon = $isSalida ? 'bi-arrow-up-right' : 'bi-arrow-down-left';
+                            ?>
                             <tr>
-                                <td data-label="Fecha" class="ps-4">
-                                    <div class="fw-bold"><?php echo date('d/m/Y', strtotime($h['fecha'])); ?></div>
-                                    <div class="small text-muted"><?php echo date('H:i', strtotime($h['fecha'])); ?> hs</div>
-                                </td>
-                                <td data-label="Material">
-                                    <span class="text-dark fw-semibold"><?php echo htmlspecialchars($h['producto_nombre']); ?></span><br>
-                                    <code class="small text-primary"><?php echo $h['codigo_interno']; ?></code>
-                                </td>
-                                <td data-label="Tipo" class="text-center">
-                                    <?php $typeClass = ($h['tipo_movimiento'] == 'Salida') ? 'bg-salida' : 'bg-entrada'; ?>
-                                    <span class="badge-custom <?php echo $typeClass; ?>">
-                                        <?php echo $h['tipo_movimiento']; ?>
-                                    </span>
-                                </td>
-                                <td data-label="Cantidad" class="text-center fw-bold text-dark">
-                                    <?php echo ($h['cantidad'] == floor($h['cantidad'])) ? number_format($h['cantidad'], 0) : number_format($h['cantidad'], 2); ?>
-                                </td>
-                                <td data-label="Responsable">
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-person-circle me-2 text-muted"></i>
-                                        <span><?php echo htmlspecialchars($h['responsable']); ?></span>
+                                <td class="ps-4">
+                                    <div class="d-flex flex-column">
+                                        <span
+                                            class="fw-bold text-dark"><?php echo date('d M, Y', strtotime($h['fecha'])); ?></span>
+                                        <small class="text-muted"><?php echo date('H:i', strtotime($h['fecha'])); ?>
+                                            hs</small>
                                     </div>
                                 </td>
-                                <td data-label="Ubicación" class="pe-4">
-                                    <span class="text-muted small"><i class="bi bi-geo-alt me-1 text-danger"></i><?php echo htmlspecialchars($h['ubicacion_obra']); ?></span>
+
+                                <td>
+                                    <div class="fw-bold text-dark"><?php echo htmlspecialchars($h['producto_nombre']); ?>
+                                    </div>
+                                    <span
+                                        class="badge bg-light text-primary border-0 small"><?php echo $h['codigo_interno']; ?></span>
+                                </td>
+
+                                <td class="text-center">
+                                    <span
+                                        class="badge-status <?php echo $statusClass; ?> px-2 py-1 rounded-3 small fw-bold">
+                                        <i class="bi <?php echo $statusIcon; ?>"></i>
+                                        <?php echo strtoupper($h['tipo_movimiento']); ?>
+                                    </span>
+                                </td>
+
+                                <td class="text-center">
+                                    <span class="fs-6 fw-bold <?php echo $isSalida ? 'text-danger' : 'text-success'; ?>">
+                                        <?php echo ($isSalida ? '-' : '+'); ?>
+                                        <?php echo number_format($h['cantidad'], 0); ?>
+                                    </span>
+                                </td>
+
+                                <td class="text-center">
+                                    <?php if (!$isSalida && $h['precio_movimiento'] > 0): ?>
+                                        <span class="fw-bold text-dark">S/
+                                            <?php echo number_format($h['precio_movimiento'], 2); ?></span>
+                                    <?php else: ?>
+                                        <span class="text-muted small">---</span>
+                                    <?php endif; ?>
+                                </td>
+
+                                <td>
+                                    <span
+                                        class="text-dark fw-medium"><?php echo htmlspecialchars($h['responsable'] ?: 'Sin asignar'); ?></span>
+                                </td>
+
+                                <td class="pe-4">
+                                    <small class="text-secondary">
+                                        <i
+                                            class="bi bi-geo-alt me-1"></i><?php echo htmlspecialchars($h['ubicacion'] ?: 'Obra'); ?>
+                                    </small>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -218,5 +141,7 @@ $historial = $stmt->fetchAll();
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

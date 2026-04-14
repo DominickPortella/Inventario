@@ -31,7 +31,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Buscador Realtime
+        // 1. Buscador Realtime (Correcto)
         const buscador = document.getElementById('buscador');
         if (buscador) {
             buscador.addEventListener('keyup', function () {
@@ -42,7 +42,31 @@
             });
         }
 
-        // Helper para AJAX de Productos
+        // 2. Lógica para ocultar/mostrar precio en Movimientos
+        const selectMov = document.getElementById('move_tipo');
+        if (selectMov) {
+            selectMov.addEventListener('change', function () {
+                // Buscamos por NAME para asegurar que coincida con lo que PHP recibe
+                const campoPrecio = document.querySelector('input[name="precio_movimiento"]');
+                const contenedorPrecio = document.getElementById('contenedor_precio');
+
+                // IMPORTANTE: Comparamos en minúsculas para que coincida con el value del HTML
+                if (this.value === 'salida') {
+                    if (campoPrecio) {
+                        campoPrecio.value = '0';
+                        campoPrecio.required = false;
+                    }
+                    if (contenedorPrecio) contenedorPrecio.style.display = 'none';
+                } else {
+                    if (campoPrecio) {
+                        campoPrecio.required = true;
+                    }
+                    if (contenedorPrecio) contenedorPrecio.style.display = 'block';
+                }
+            });
+        }
+
+        // 3. Helper para AJAX (Mantenlo como está, es muy eficiente)
         const handleAJAX = (formId, url) => {
             const form = document.getElementById(formId);
             if (!form) return;
@@ -51,7 +75,6 @@
                 const btn = this.querySelector('button[type="submit"]');
                 btn.disabled = true;
 
-                // FormData captura TODOS los inputs que tengan un atributo 'name'
                 const datos = new FormData(this);
 
                 fetch(url, { method: 'POST', body: datos })
@@ -59,7 +82,7 @@
                     .then(data => {
                         if (data.status === 'success') {
                             Swal.fire({ icon: 'success', title: '¡Hecho!', timer: 1000, showConfirmButton: false })
-                                .then(() => location.reload()); // RECARGA para ver cambios
+                                .then(() => location.reload());
                         } else {
                             Swal.fire('Error', data.message, 'error');
                             btn.disabled = false;
@@ -73,8 +96,8 @@
         };
 
         handleAJAX('formEditar', 'actualizar_producto_ajax.php');
-        handleAJAX('formMovimiento', 'guardar_movimiento.php');
-        handleAJAX('formNuevoMaterial', 'guardar_producto.php');
+        handleAJAX('formMovimiento', 'procesar_movimiento_ajax.php'); // Ruta corregida
+        handleAJAX('formNuevoMaterial', './modules/guardar_producto.php');
     });
 
     // Gestión de Usuarios (Sin cambios, está correcto)
@@ -142,5 +165,40 @@
                     }
                 });
         };
+    }
+
+    function eliminarProducto(id, nombre) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: `Vas a eliminar el material: ${nombre}. Esta acción no se puede deshacer.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Enviamos la petición por AJAX
+                fetch('./modules/eliminar_producto.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `id=${id}`
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            Swal.fire('¡Eliminado!', data.message, 'success')
+                                .then(() => location.reload()); // Recargamos para actualizar la lista
+                        } else {
+                            Swal.fire('Error', data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire('Error', 'No se pudo procesar la solicitud', 'error');
+                    });
+            }
+        });
     }
 </script>

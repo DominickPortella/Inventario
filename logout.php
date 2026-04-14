@@ -1,6 +1,6 @@
 <?php
 session_start();
-session_destroy(); // Borra la sesión del servidor
-header("Location: index.php"); // Lo manda al login
+session_destroy();
+header("Location: index.php");
 exit();
 ?>

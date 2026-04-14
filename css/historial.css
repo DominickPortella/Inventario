@@ -1,0 +1,207 @@
+/* =========================================
+   ESTILOS GENERALES (PANTALLA)
+   ========================================= */
+:root {
+    --primary-color: #0d6efd;
+    --bg-body: #f8f9fa;
+    --text-dark: #343a40;
+    --border-color: rgba(0, 0, 0, 0.05);
+}
+
+body {
+    background-color: var(--bg-body);
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+}
+
+.main-container {
+    max-width: 1300px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+/* Card con sombra suave estilo Apple/Stripe */
+.custom-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+/* Estilos de Tabla */
+.table thead th {
+    background-color: #fcfcfc;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    color: #6c757d;
+    padding: 1.25rem 1rem;
+    border-bottom: 2px solid #f1f1f1;
+}
+
+.table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background-color: #f8faff;
+}
+
+/* Badges de Estado Premium */
+.badge-status {
+    padding: 0.6rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.7rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.status-entrada {
+    background-color: #e6fcf5;
+    color: #087f5b;
+    border: 1px solid #c3fae8;
+}
+
+.status-salida {
+    background-color: #fff5f5;
+    color: #c92a2a;
+    border: 1px solid #ffe3e3;
+}
+
+/* Icono de Producto */
+.product-icon {
+    width: 40px;
+    height: 40px;
+    background: #eef2ff;
+    color: #4361ee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 1.2rem;
+}
+
+/* Animación Botón Volver */
+.btn-back {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-back:hover {
+    background-color: #f1f3f5;
+    transform: translateX(-4px);
+}
+
+/* Ocultar header de impresión en pantalla */
+.print-header {
+    display: none;
+}
+
+/* Estilo específico para el logo en la navbar */
+.navbar-logo {
+    height: 45px;
+    /* Ajusta la altura a tu gusto */
+    width: auto;
+    object-fit: contain;
+}
+
+/* Ajuste para móviles: que el logo no sea gigante */
+@media (max-width: 576px) {
+    .navbar-logo {
+        height: 35px;
+    }
+}
+
+/* =========================================
+   ESTILOS EXCLUSIVOS PARA IMPRESIÓN
+   ========================================= */
+@media print {
+    @page {
+        size: landscape;
+        margin: 1cm;
+    }
+
+    body {
+        background: white !important;
+        font-size: 10pt;
+    }
+
+    /* Ocultar elementos innecesarios */
+    .navbar,
+    .btn-print,
+    .btn-back,
+    .bi-clock,
+    .bi-geo-alt-fill {
+        display: none !important;
+    }
+
+    .main-container {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Mostrar y dar estilo al Header de Impresión */
+    .print-header {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 15px;
+    }
+
+    .print-logo {
+        height: 70px;
+        width: auto;
+    }
+
+    /* Ajustes de Tabla para papel */
+    .custom-card {
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    .table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    .table thead th {
+        background-color: #f8f9fa !important;
+        color: black !important;
+        border-bottom: 1px solid #000 !important;
+        -webkit-print-color-adjust: exact;
+    }
+
+    /* Forzar colores de Badges en PDF/Papel */
+    .badge-status {
+        border: 1px solid #ccc !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .status-salida {
+        background-color: #fff5f5 !important;
+        color: #c92a2a !important;
+    }
+
+    .status-entrada {
+        background-color: #e6fcf5 !important;
+        color: #087f5b !important;
+    }
+
+    /* Asegurar visibilidad de cantidades */
+    .text-danger {
+        color: #c92a2a !important;
+    }
+
+    .text-success {
+        color: #087f5b !important;
+    }
+}
