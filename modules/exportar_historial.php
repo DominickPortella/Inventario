@@ -7,7 +7,7 @@ header("Content-Disposition: attachment; filename=Historial_Movimientos_" . date
 header("Pragma: no-cache");
 header("Expires: 0");
 
-// Consulta idéntica a la de historial.php para que los datos coincidan
+// Consulta con m.* para traer todas las columnas de movimientos, incluyendo observaciones
 $sql = "SELECT m.*, p.nombre as producto_nombre, p.codigo_interno, u.usuario as nombre_usuario
         FROM movimientos m 
         JOIN productos p ON m.producto_id = p.id 
@@ -29,15 +29,21 @@ $historial = $stmt->fetchAll();
             <th style="background-color: #198754;">COSTO UNIT. (S/)</th>
             <th style="background-color: #198754;">RESPONSABLE</th>
             <th style="background-color: #198754;">UBICACIÓN</th>
+            <th style="background-color: #198754;">OBSERVACIONES</th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($historial as $h): 
+        <?php foreach ($historial as $h):
             $isSalida = (strtolower($h['tipo_movimiento']) == 'salida');
-        ?>
+            ?>
             <tr>
                 <td><?php echo date('d/m/Y', strtotime($h['fecha'])); ?></td>
-                <td><?php echo date('H:i', strtotime($h['fecha'])); ?></td>
+                <td>
+                    <?php
+                    $hora_e = date('H:i:s', strtotime($h['fecha']));
+                    echo ($hora_e !== '00:00:01') ? date('H:i', strtotime($h['fecha'])) : '';
+                    ?>
+                </td>
                 <td><?php echo $h['codigo_interno']; ?></td>
                 <td><?php echo htmlspecialchars($h['producto_nombre']); ?></td>
                 <td align="center"><?php echo strtoupper($h['tipo_movimiento']); ?></td>
@@ -49,6 +55,7 @@ $historial = $stmt->fetchAll();
                 </td>
                 <td><?php echo htmlspecialchars($h['responsable'] ?: 'Sin asignar'); ?></td>
                 <td><?php echo htmlspecialchars($h['ubicacion'] ?: 'Obra'); ?></td>
+                <td><?php echo htmlspecialchars($h['observaciones'] ?: '-'); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

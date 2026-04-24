@@ -11,7 +11,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $responsable = $_POST['responsable'];
     $ubicacion = $_POST['ubicacion'] ?? 'Obra';
 
-    // LÓGICA DE PRECIO:
+    // --- NUEVA LÓGICA DE FECHA Y HORA ---
+    $fecha_input = $_POST['fecha_manual'];
+    $hora_input = $_POST['hora_manual'];
+
+    if (!empty($hora_input)) {
+        // Si puso hora, la guardamos normal
+        $fecha_final = $fecha_input . ' ' . $hora_input . ':00';
+    } else {
+        // Si NO puso hora, guardamos la fecha con una marca especial (00:00:01)
+        $fecha_final = $fecha_input . ' 00:00:01';
+    }
+
+    // ------------------------------------
+
     if (strtolower($tipo) === 'entrada') {
         $precio = (isset($_POST['precio_movimiento']) && $_POST['precio_movimiento'] !== '')
             ? floatval($_POST['precio_movimiento'])
@@ -23,9 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
-        // 1. Insertar movimiento
-        $sql1 = "INSERT INTO movimientos (producto_id, tipo_movimiento, cantidad, precio_movimiento, responsable, ubicacion, observaciones, usuario_id) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        // 1. Insertar movimiento (Agregamos la columna 'fecha' en el INSERT)
+        $sql1 = "INSERT INTO movimientos (producto_id, tipo_movimiento, cantidad, precio_movimiento, responsable, ubicacion, observaciones, usuario_id, fecha) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $pdo->prepare($sql1)->execute([
             $id,
@@ -35,19 +48,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $responsable,
             $ubicacion,
             $_POST['observaciones'] ?? '',
-            $_SESSION['user_id']
+            $_SESSION['user_id'],
+            $fecha_final // <--- Aquí mandamos la fecha armada
         ]);
 
-        // 2. ACTUALIZACIÓN DE PRODUCTO (Stock y Precio)
+        // 2. ACTUALIZACIÓN DE PRODUCTO
         if (strtolower($tipo) === 'entrada') {
-            // Sumamos stock y sumamos el precio al acumulado actual
             $sql2 = "UPDATE productos SET 
                      stock_actual = stock_actual + ?, 
                      precio_unitario = precio_unitario + ? 
                      WHERE id = ?";
             $pdo->prepare($sql2)->execute([$cantidad, $precio, $id]);
         } else {
-            // Si es salida, solo restamos stock
             $sql2 = "UPDATE productos SET stock_actual = stock_actual - ? WHERE id = ?";
             $pdo->prepare($sql2)->execute([$cantidad, $id]);
         }

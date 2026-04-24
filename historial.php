@@ -10,9 +10,11 @@ $sql = "SELECT m.*, p.nombre as producto_nombre, p.codigo_interno, u.usuario as 
         FROM movimientos m 
         JOIN productos p ON m.producto_id = p.id 
         LEFT JOIN usuarios u ON m.usuario_id = u.id
-        ORDER BY m.fecha DESC";
+        ORDER BY m.fecha DESC, m.id DESC";
 $stmt = $pdo->query($sql);
 $historial = $stmt->fetchAll();
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -53,10 +55,18 @@ $historial = $stmt->fetchAll();
                 <h2 class="fw-bold text-dark mb-1">Historial de Movimientos</h2>
                 <p class="text-muted mb-0">Auditoría en tiempo real de entradas y salidas.</p>
             </div>
-            <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                <button onclick="window.print()" class="btn btn-white shadow-sm border btn-print fw-bold px-4 py-2">
+            <div class="d-flex justify-content-md-end justify-content-start align-items-center gap-2">
+
+                <a href="modules/exportar_historial.php"
+                    class="btn btn-success shadow-sm fw-bold px-4 py-2 d-inline-flex align-items-center d-print-none">
+                    <i class="bi bi-file-earmark-excel me-2"></i>Exportar a Excel
+                </a>
+
+                <button onclick="window.print()"
+                    class="btn btn-white shadow-sm border btn-print fw-bold px-4 py-2 d-inline-flex align-items-center">
                     <i class="bi bi-printer me-2 text-primary"></i>Imprimir Reporte
                 </button>
+
             </div>
         </div>
 
@@ -84,10 +94,20 @@ $historial = $stmt->fetchAll();
                             <tr>
                                 <td class="ps-4">
                                     <div class="d-flex flex-column">
-                                        <span
-                                            class="fw-bold text-dark"><?php echo date('d M, Y', strtotime($h['fecha'])); ?></span>
-                                        <small class="text-muted"><?php echo date('H:i', strtotime($h['fecha'])); ?>
-                                            hs</small>
+                                        <span class="fw-bold text-dark">
+                                            <?php echo date('d M, Y', strtotime($h['fecha'])); ?>
+                                        </span>
+
+                                        <?php
+                                        // Extraemos la hora para verificar la marca especial
+                                        $hora_registro = date('H:i:s', strtotime($h['fecha']));
+                                        if ($hora_registro !== '00:00:01'): // Solo muestra si NO es la marca especial
+                                            ?>
+                                            <small class="text-muted">
+                                                <i class="bi bi-clock me-1"></i>
+                                                <?php echo date('H:i', strtotime($h['fecha'])); ?> hs
+                                            </small>
+                                        <?php endif; ?>
                                     </div>
                                 </td>
 

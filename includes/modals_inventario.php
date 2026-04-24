@@ -331,6 +331,20 @@
                     </div>
                 </div>
 
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-secondary"><i
+                                class="bi bi-calendar-event me-1"></i>Fecha Movimiento *</label>
+                        <input type="date" name="fecha_manual" id="fecha_manual" class="form-control shadow-sm"
+                            value="<?php echo date('Y-m-d'); ?>" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-secondary"><i class="bi bi-clock me-1"></i>Hora
+                            (Opcional)</label>
+                        <input type="time" name="hora_manual" id="hora_manual" class="form-control shadow-sm">
+                    </div>
+                </div>
+
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label class="form-label small fw-bold text-secondary">Tipo de Movimiento</label>
@@ -354,8 +368,6 @@
                             <input type="number" step="0.01" name="precio_movimiento" id="precio_movimiento"
                                 class="form-control border-success shadow-sm fw-bold" placeholder="0.00">
                         </div>
-                        <small class="text-muted" style="font-size: 0.75rem;">Indica cuánto costó este nuevo ingreso
-                            para acumularlo al precio actual.</small>
                     </div>
                 </div>
 
