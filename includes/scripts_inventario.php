@@ -2,27 +2,22 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    function prepararEdicion(p) {
-        // Log para depuración: Abre la consola (F12) y verás si p trae los datos
-        console.log("Datos recibidos para editar:", p);
+function prepararEdicion(p) {
+    console.log("Datos recibidos para editar:", p);
 
-        document.getElementById('edit_id').value = p.id;
-        document.getElementById('edit_nombre').value = p.nombre;
-        document.getElementById('edit_codigo').value = p.codigo_interno;
-        document.getElementById('edit_unidad').value = p.unidad_medida;
+    document.getElementById('edit_id').value = p.id;
+    document.getElementById('edit_nombre').value = p.nombre;
+    document.getElementById('edit_codigo').value = p.codigo_interno || '';
+    document.getElementById('edit_unidad').value = p.unidad_medida || '';
+    document.getElementById('edit_fabricante').value = p.fabricante || '';
+    document.getElementById('edit_tipo').value = p.tipo || 'MATERIAL';
+    document.getElementById('edit_almacen').value = p.almacen || '';
+    document.getElementById('edit_stock_minimo').value = p.stock_minimo || 0;
+    document.getElementById('edit_precio').value = p.precio_unitario || 0;
+    document.getElementById('edit_observaciones').value = p.observaciones || '';
 
-        // CORRECCIÓN: Aseguramos que cargue fabricante y almacén aunque sean nulos
-        document.getElementById('edit_fabricante').value = p.fabricante !== null ? p.fabricante : '';
-        document.getElementById('edit_tipo').value = p.tipo;
-        document.getElementById('edit_almacen').value = p.almacen !== null ? p.almacen : 'OB. MULTIFAM PARDO';
-
-        document.getElementById('edit_stock_minimo').value = p.stock_minimo;
-
-        // IMPORTANTE: Asegúrate que la propiedad sea p.precio_unitario (como en tu SQL)
-        document.getElementById('edit_precio').value = p.precio_unitario !== null ? p.precio_unitario : 0;
-
-        new bootstrap.Modal(document.getElementById('modalEditar')).show();
-    }
+    new bootstrap.Modal(document.getElementById('modalEditar')).show();
+}
 
     function prepararMovimiento(id, nombre) {
         document.getElementById('mov_producto_id').value = id;
