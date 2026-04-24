@@ -23,6 +23,7 @@ header("Expires: 0");
             <th style="background-color: #0d6efd;">STOCK ACTUAL</th>
             <th style="background-color: #0d6efd;">PRECIO UNITARIO</th>
             <th style="background-color: #0d6efd;">TOTAL S/</th>
+            <th style="background-color: #0d6efd;">OBSERVACIONES</th>
         </tr>
     </thead>
     <tbody>
@@ -45,6 +46,7 @@ header("Expires: 0");
             echo "<td align='center'>" . number_format($p['stock_actual'], 2) . "</td>";
             echo "<td align='right'>" . number_format($p['precio_unitario'], 2) . "</td>";
             echo "<td align='right' style='font-weight:bold;'>" . number_format($total_fila, 2) . "</td>";
+            echo "<td>" . htmlspecialchars($p['observaciones'] ?? '') . "</td>";
             echo "</tr>";
         }
         ?>
