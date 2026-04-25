@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="css/tu_archivo_estilos.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <div class="container-fluid mt-4 mb-5 px-4">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
@@ -223,73 +223,83 @@
 
 <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <form id="formEditar" class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
-            <div class="modal-header bg-secondary text-white border-0 py-3"
-                style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
-                <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square me-2"></i>Actualizar Información</h5>
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 12px;">
+            <div class="modal-header bg-primary text-white py-3">
+                <h5 class="modal-title d-flex align-items-center fw-bold">
+                    <i class="bi bi-pencil-square me-2"></i> ACTUALIZAR INFORMACIÓN
+                </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body p-4">
-                <input type="hidden" name="id" id="edit_id">
-
-                <h6 class="text-secondary fw-bold text-uppercase mb-3 pb-2 border-bottom"
-                    style="font-size: 0.8rem; letter-spacing: 1px;">
-                    <i class="bi bi-info-circle me-1"></i> Datos Principales
-                </h6>
-                <div class="row g-3 mb-4">
-                    <div class="col-md-4">
-                        <label class="form-label small fw-bold text-secondary">CÓDIGO</label>
-                        <input type="text" name="codigo_interno" id="edit_codigo" class="form-control fw-bold">
+            
+            <form id="formEditar">
+                <div class="modal-body p-4 bg-light">
+                    <input type="hidden" id="edit_id" name="id">
+                    
+                    <div class="card border-0 shadow-sm p-3 mb-4">
+                        <p class="text-primary fw-bold small mb-3 border-bottom pb-1">
+                            <i class="bi bi-info-circle-fill me-1"></i> INFORMACIÓN GENERAL
+                        </p>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-muted">CÓDIGO INTERNO</label>
+                                <input type="text" id="edit_codigo" name="codigo_interno" class="form-control bg-light border-0 fw-bold" readonly>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label small fw-bold text-muted">DESCRIPCIÓN / NOMBRE</label>
+                                <input type="text" id="edit_nombre" name="nombre" class="form-control border-primary-subtle" required>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-8">
-                        <label class="form-label small fw-bold text-secondary">NOMBRE DEL MATERIAL</label>
-                        <input type="text" name="nombre" id="edit_nombre" class="form-control">
+
+                    <div class="card border-0 shadow-sm p-3">
+                        <p class="text-primary fw-bold small mb-3 border-bottom pb-1">
+                            <i class="bi bi-gear-fill me-1"></i> INVENTARIO Y COSTOS
+                        </p>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-muted">UNIDAD</label>
+                                <input type="text" id="edit_unidad" name="unidad_medida" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-muted">FABRICANTE</label>
+                                <input type="text" id="edit_fabricante" name="fabricante" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-muted">CATEGORÍA</label>
+                                <select id="edit_tipo" name="tipo" class="form-select">
+                                    <option value="MATERIAL">MATERIAL</option>
+                                    <option value="HERRAMIENTA">HERRAMIENTA</option>
+                                    <option value="EQUIPO">EQUIPO</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">ALMACÉN</label>
+                                <input type="text" id="edit_almacen" name="almacen" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small fw-bold text-danger">STOCK MÍN.</label>
+                                <input type="number" id="edit_stock_minimo" name="stock_minimo" class="form-control border-danger-subtle fw-bold text-danger">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small fw-bold text-primary">PRECIO (S/)</label>
+                                <input type="number" id="edit_precio" name="precio_unitario" class="form-control border-primary-subtle fw-bold text-primary" step="0.01">
+                            </div>
+                            <div class="col-12 mt-3">
+                                <label class="form-label small fw-bold text-muted">OBSERVACIONES</label>
+                                <textarea id="edit_observaciones" name="observaciones" class="form-control bg-white" rows="2" style="resize: none;"></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="row g-3 mb-4">
-                    <div class="col-md-4">
-                        <label class="form-label small fw-bold text-secondary">UNIDAD</label>
-                        <input type="text" name="unidad_medida" id="edit_unidad" class="form-control">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label small fw-bold text-secondary">FABRICANTE</label>
-                        <input list="datalistFabricantes" name="fabricante" id="edit_fabricante" class="form-control">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label small fw-bold text-secondary">CATEGORÍA</label>
-                        <input list="datalistCategorias" name="tipo" id="edit_tipo" class="form-control">
-                    </div>
+                <div class="modal-footer bg-white border-0 p-3">
+                    <button type="button" class="btn btn-light fw-bold text-muted px-4" data-bs-dismiss="modal">CANCELAR</button>
+                    <button type="submit" class="btn btn-primary px-5 shadow fw-bold">
+                        <i class="bi bi-check-circle me-1"></i> GUARDAR CAMBIOS
+                    </button>
                 </div>
-
-                <h6 class="text-secondary fw-bold text-uppercase mb-3 pb-2 border-bottom"
-                    style="font-size: 0.8rem; letter-spacing: 1px;">
-                    <i class="bi bi-gear me-1"></i> Configuración de Inventario
-                </h6>
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label small fw-bold text-secondary">ALMACÉN</label>
-                        <input type="text" name="almacen" id="edit_almacen" class="form-control">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label small fw-bold text-secondary">STOCK MÍN.</label>
-                        <input type="number" step="0.01" name="stock_minimo" id="edit_stock_minimo"
-                            class="form-control border-danger-subtle text-danger fw-bold">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label small fw-bold text-secondary">PRECIO (S/)</label>
-                        <input type="number" step="0.01" name="precio_unitario" id="edit_precio"
-                            class="form-control border-primary-subtle text-primary fw-bold">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer border-0 bg-light p-3"
-                style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                <button type="button" class="btn btn-outline-secondary border-0"
-                    data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-secondary px-4 fw-bold shadow">Guardar Cambios</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -331,6 +341,20 @@
                     </div>
                 </div>
 
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-secondary"><i
+                                class="bi bi-calendar-event me-1"></i>Fecha Movimiento *</label>
+                        <input type="date" name="fecha_manual" id="fecha_manual" class="form-control shadow-sm"
+                            value="<?php echo date('Y-m-d'); ?>" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-secondary"><i class="bi bi-clock me-1"></i>Hora
+                            (Opcional)</label>
+                        <input type="time" name="hora_manual" id="hora_manual" class="form-control shadow-sm">
+                    </div>
+                </div>
+
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label class="form-label small fw-bold text-secondary">Tipo de Movimiento</label>
@@ -353,10 +377,7 @@
                             <span class="input-group-text bg-success text-white border-0">S/</span>
                             <input type="number" step="0.01" name="precio_movimiento" id="precio_movimiento"
                                 class="form-control border-success shadow-sm fw-bold" placeholder="0.00">
-                            class="form-control border-success shadow-sm fw-bold" placeholder="0.00">
                         </div>
-                        <small class="text-muted" style="font-size: 0.75rem;">Indica cuánto costó este nuevo ingreso
-                            para acumularlo al precio actual.</small>
                     </div>
                 </div>
 

@@ -204,4 +204,14 @@ body {
     .text-success {
         color: #087f5b !important;
     }
+
+    @media print {
+
+        .btn-success,
+        .btn-print,
+        .btn-back,
+        .navbar {
+            display: none !important;
+        }
+    }
 }
