@@ -31,7 +31,8 @@ require 'includes/logica_inventario.php';
             </a>
             <div class="d-flex align-items-center">
                 <div class="text-white me-3 d-none d-md-block">
-                    <small class="text-muted">Hola,</small> <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong>
+                    <small class="text-muted">Hola,</small>
+                    <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong>
                 </div>
                 <a href="logout.php" class="btn btn-outline-danger btn-sm rounded-pill px-3">Salir</a>
             </div>
@@ -40,7 +41,7 @@ require 'includes/logica_inventario.php';
 
     <div class="container-fluid mt-4 mb-5 px-4">
         <div id="contenido-inventario">
-            <?php 
+            <?php
             // Si tu lógica imprime la tabla directamente, asegúrate que esté aquí.
             // Si no, puedes incluir un archivo de vista aquí.
             ?>
@@ -55,4 +56,5 @@ require 'includes/logica_inventario.php';
     require 'includes/scripts_inventario.php';
     ?>
 </body>
+
 </html>

@@ -5,11 +5,14 @@ require_once 'config/db.php';
 header('Content-Type: application/json');
 
 try {
-    if (!isset($pdo)) throw new Exception("No se encontró la conexión \$pdo");
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') throw new Exception("Petición no válida");
+    if (!isset($pdo))
+        throw new Exception("No se encontró la conexión \$pdo");
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+        throw new Exception("Petición no válida");
 
     $id = $_POST['id'] ?? null;
-    if (!$id) throw new Exception("ID de producto no recibido");
+    if (!$id)
+        throw new Exception("ID de producto no recibido");
 
     $data = [
         'nom' => $_POST['nombre'] ?? '',
@@ -22,7 +25,7 @@ try {
         'stk' => floatval($_POST['stock_minimo'] ?? 0),
         'pre' => floatval($_POST['precio_unitario'] ?? 0),
         'obs' => $_POST['observaciones'] ?? '',
-        'id'  => $id
+        'id' => $id
     ];
 
     // Query corregida con 'stock_actual' según tu estructura SQL
@@ -40,7 +43,7 @@ try {
             WHERE id = :id";
 
     $stmt = $pdo->prepare($sql);
-    
+
     if ($stmt->execute($data)) {
         echo json_encode(['status' => 'success', 'message' => 'Material actualizado correctamente']);
     } else {

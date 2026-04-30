@@ -2,26 +2,26 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-function prepararEdicion(p) {
-    console.log("Datos recibidos para editar:", p);
+    function prepararEdicion(p) {
+        console.log("Datos recibidos para editar:", p);
 
-    document.getElementById('edit_id').value = p.id;
-    document.getElementById('edit_nombre').value = p.nombre;
-    document.getElementById('edit_codigo').value = p.codigo_interno || '';
-    document.getElementById('edit_unidad').value = p.unidad_medida || '';
-    document.getElementById('edit_fabricante').value = p.fabricante || '';
-    document.getElementById('edit_tipo').value = p.tipo || 'MATERIAL';
-    document.getElementById('edit_almacen').value = p.almacen || '';
-    
-    // Usamos p.stock_actual para llenar el campo
-    document.getElementById('edit_stock_actual').value = p.stock_actual || 0; 
-    
-    document.getElementById('edit_stock_minimo').value = p.stock_minimo || 0;
-    document.getElementById('edit_precio').value = p.precio_unitario || 0;
-    document.getElementById('edit_observaciones').value = p.observaciones || '';
+        document.getElementById('edit_id').value = p.id;
+        document.getElementById('edit_nombre').value = p.nombre;
+        document.getElementById('edit_codigo').value = p.codigo_interno || '';
+        document.getElementById('edit_unidad').value = p.unidad_medida || '';
+        document.getElementById('edit_fabricante').value = p.fabricante || '';
+        document.getElementById('edit_tipo').value = p.tipo || 'MATERIAL';
+        document.getElementById('edit_almacen').value = p.almacen || '';
 
-    new bootstrap.Modal(document.getElementById('modalEditar')).show();
-}
+        // Usamos p.stock_actual para llenar el campo
+        document.getElementById('edit_stock_actual').value = p.stock_actual || 0;
+
+        document.getElementById('edit_stock_minimo').value = p.stock_minimo || 0;
+        document.getElementById('edit_precio').value = p.precio_unitario || 0;
+        document.getElementById('edit_observaciones').value = p.observaciones || '';
+
+        new bootstrap.Modal(document.getElementById('modalEditar')).show();
+    }
 
     function prepararMovimiento(id, nombre) {
         document.getElementById('mov_producto_id').value = id;
