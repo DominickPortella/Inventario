@@ -12,6 +12,10 @@ function prepararEdicion(p) {
     document.getElementById('edit_fabricante').value = p.fabricante || '';
     document.getElementById('edit_tipo').value = p.tipo || 'MATERIAL';
     document.getElementById('edit_almacen').value = p.almacen || '';
+    
+    // Usamos p.stock_actual para llenar el campo
+    document.getElementById('edit_stock_actual').value = p.stock_actual || 0; 
+    
     document.getElementById('edit_stock_minimo').value = p.stock_minimo || 0;
     document.getElementById('edit_precio').value = p.precio_unitario || 0;
     document.getElementById('edit_observaciones').value = p.observaciones || '';
