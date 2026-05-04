@@ -35,7 +35,8 @@ $categorias_fijas = [
     "SEGURIDAD",
     "INSTRUMENTOS",
     "ACC.CISTERNA",
-    "AISLAMIENTO"
+    "AISLAMIENTO",
+    "MATERIALES"
 ];
 
 $stmt_cat = $pdo->query("SELECT DISTINCT tipo FROM productos WHERE tipo IS NOT NULL AND tipo != ''");
@@ -123,7 +124,10 @@ $fabricantes_fijos = [
     "TUMI",
     "WD-40",
     "WELDWELL",
-    "WINTERS"
+    "WINTERS",
+    "THOR GEL",
+    "KAMASA",
+    "STRONGER"
 ];
 
 $stmt_fab = $pdo->query("SELECT DISTINCT fabricante FROM productos WHERE fabricante IS NOT NULL AND fabricante != ''");
