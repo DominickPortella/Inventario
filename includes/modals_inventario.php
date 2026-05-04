@@ -230,11 +230,11 @@
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            
+
             <form id="formEditar">
                 <div class="modal-body p-4 bg-light">
                     <input type="hidden" id="edit_id" name="id">
-                    
+
                     <div class="card border-0 shadow-sm p-3 mb-4">
                         <p class="text-primary fw-bold small mb-3 border-bottom pb-1">
                             <i class="bi bi-info-circle-fill me-1"></i> INFORMACIÓN GENERAL
@@ -242,11 +242,13 @@
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <label class="form-label small fw-bold text-muted">CÓDIGO INTERNO</label>
-                                <input type="text" id="edit_codigo" name="codigo_interno" class="form-control bg-light border-0 fw-bold" readonly>
+                                <input type="text" id="edit_codigo" name="codigo_interno"
+                                    class="form-control bg-light border-0 fw-bold" readonly>
                             </div>
                             <div class="col-md-8">
                                 <label class="form-label small fw-bold text-muted">DESCRIPCIÓN / NOMBRE</label>
-                                <input type="text" id="edit_nombre" name="nombre" class="form-control border-primary-subtle" required>
+                                <input type="text" id="edit_nombre" name="nombre"
+                                    class="form-control border-primary-subtle" required>
                             </div>
                         </div>
                     </div>
@@ -277,23 +279,32 @@
                                 <input type="text" id="edit_almacen" name="almacen" class="form-control">
                             </div>
                             <div class="col-md-3">
+                                <label class="form-label small fw-bold text-success">STOCK ACTUAL</label>
+                                <input type="number" id="edit_stock_actual" name="stock_actual"
+                                    class="form-control border-success-subtle fw-bold text-success" step="0.01">
+                            </div>
+                            <div class="col-md-3">
                                 <label class="form-label small fw-bold text-danger">STOCK MÍN.</label>
-                                <input type="number" id="edit_stock_minimo" name="stock_minimo" class="form-control border-danger-subtle fw-bold text-danger">
+                                <input type="number" id="edit_stock_minimo" name="stock_minimo"
+                                    class="form-control border-danger-subtle fw-bold text-danger">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label small fw-bold text-primary">PRECIO (S/)</label>
-                                <input type="number" id="edit_precio" name="precio_unitario" class="form-control border-primary-subtle fw-bold text-primary" step="0.01">
+                                <input type="number" id="edit_precio" name="precio_unitario"
+                                    class="form-control border-primary-subtle fw-bold text-primary" step="0.01">
                             </div>
                             <div class="col-12 mt-3">
                                 <label class="form-label small fw-bold text-muted">OBSERVACIONES</label>
-                                <textarea id="edit_observaciones" name="observaciones" class="form-control bg-white" rows="2" style="resize: none;"></textarea>
+                                <textarea id="edit_observaciones" name="observaciones" class="form-control bg-white"
+                                    rows="2" style="resize: none;"></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="modal-footer bg-white border-0 p-3">
-                    <button type="button" class="btn btn-light fw-bold text-muted px-4" data-bs-dismiss="modal">CANCELAR</button>
+                    <button type="button" class="btn btn-light fw-bold text-muted px-4"
+                        data-bs-dismiss="modal">CANCELAR</button>
                     <button type="submit" class="btn btn-primary px-5 shadow fw-bold">
                         <i class="bi bi-check-circle me-1"></i> GUARDAR CAMBIOS
                     </button>
